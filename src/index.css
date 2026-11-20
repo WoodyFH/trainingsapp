@@ -1,0 +1,86 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-canvas: #f6f6f8;
+  --color-surface: #ffffff;
+  --color-ink: #18181b;
+  --color-line: #efeff2;
+
+  /* Farben pro Trainingsart */
+  --color-t1: #f04e5e;
+  --color-t2: #3b82f6;
+  --color-t3: #84cc16;
+  --color-cardio: #8b5cf6;
+  --color-free: #f59e0b;
+
+  --radius-card: 1.5rem;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  /* iOS zoomt bei Eingabefeldern unter 16 px */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .card {
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+    box-shadow: 0 1px 2px rgb(24 24 27 / 0.04);
+  }
+
+  .label-caps {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-zinc-400);
+  }
+
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+
+  /* Muskelzonen im Männchen */
+  .muscle {
+    transition: fill 0.2s ease;
+  }
+
+  .muscle-interactive {
+    cursor: pointer;
+    outline: none;
+  }
+
+  .muscle-interactive:hover {
+    filter: brightness(0.94);
+  }
+
+  .muscle-interactive:focus-visible > path:not([stroke='transparent']) {
+    stroke: #2563eb;
+    stroke-width: 1.5px;
+    vector-effect: non-scaling-stroke;
+  }
+}

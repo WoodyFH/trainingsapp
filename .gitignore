@@ -1,0 +1,21 @@
+# Abhängigkeiten und Build
+node_modules
+dist
+*.local
+*.tsbuildinfo
+
+# Geheimnisse und private Daten (niemals committen)
+.env
+.env.*
+!.env.example
+private/
+*.xlsx
+*.xls
+
+# Editor und System
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+.claude/
