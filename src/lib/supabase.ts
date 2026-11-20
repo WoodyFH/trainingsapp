@@ -1,10 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
+import { isSecretKey } from './keyCheck'
 
 const url = import.meta.env.VITE_SUPABASE_URL
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 /** false, wenn VITE_SUPABASE_URL oder VITE_SUPABASE_ANON_KEY beim Build fehlen. */
-export const supabaseConfigured = Boolean(url && key)
+export const supabaseKeyIsSecret = isSecretKey(key)
+export const supabaseConfigured = Boolean(url && key) && !supabaseKeyIsSecret
 
 /**
  * Supabase-Client. Es wird nur der öffentliche Publishable-/Anon-Key verwendet; der Schutz der
@@ -14,7 +16,7 @@ export const supabaseConfigured = Boolean(url && key)
  *   auf derselben Origin. So kommen sich die beiden Sitzungen nicht in die Quere.
  * - detectSessionInUrl aus: Die App nutzt HashRouter, Tokens im URL-Hash wären sonst ein Problem.
  */
-export const supabase = createClient(url ?? 'http://localhost:54321', key ?? 'nicht-konfiguriert', {
+export const supabase = createClient(url ?? 'http://localhost:54321', supabaseKeyIsSecret ? 'nicht-konfiguriert' : (key ?? 'nicht-konfiguriert'), {
   auth: {
     persistSession: true,
     autoRefreshToken: true,

@@ -43,6 +43,12 @@ jobs:
             echo "::error::Die Repository-Variablen VITE_SUPABASE_URL und VITE_SUPABASE_ANON_KEY fehlen (Settings > Secrets and variables > Actions, als Variable oder Secret)."
             exit 1
           fi
+          node -e '
+            const k = process.env.VITE_SUPABASE_ANON_KEY || "";
+            let secret = k.startsWith("sb_secret_");
+            try { secret ||= JSON.parse(Buffer.from(k.split(".")[1], "base64url").toString()).role === "service_role"; } catch {}
+            if (secret) { console.error("::error::VITE_SUPABASE_ANON_KEY ist ein geheimer Schluessel (secret bzw. service_role). Verwende den Publishable- bzw. Anon-Key."); process.exit(1); }
+          '
 
       - name: App bauen
         env:

@@ -2,7 +2,7 @@ import { Eye, EyeOff, LogIn, TriangleAlert } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { useAuth } from '../auth/AuthProvider'
 import { AppLogo, APP_NAME } from '../components/ui/AppLogo'
-import { supabaseConfigured } from '../lib/supabase'
+import { supabaseConfigured, supabaseKeyIsSecret } from '../lib/supabase'
 
 export function LoginPage() {
   const { signIn } = useAuth()
@@ -41,7 +41,9 @@ export function LoginPage() {
               className="m-0 flex items-start gap-2 rounded-2xl bg-amber-50 p-3 text-sm text-amber-800"
             >
               <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
-              Supabase ist nicht konfiguriert. Setze VITE_SUPABASE_URL und VITE_SUPABASE_ANON_KEY.
+              {supabaseKeyIsSecret
+                ? 'Der hinterlegte Schlüssel ist ein geheimer Schlüssel und wird nicht verwendet. Trage in VITE_SUPABASE_ANON_KEY den Publishable-Key ein.'
+                : 'Supabase ist nicht konfiguriert. Setze VITE_SUPABASE_URL und VITE_SUPABASE_ANON_KEY.'}
             </p>
           )}
 
