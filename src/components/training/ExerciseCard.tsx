@@ -182,13 +182,15 @@ export function ExerciseCard({
       {expanded && (
         <div id={panelId} className="mt-4 flex flex-col gap-4 border-t border-line pt-4">
           <div className={`grid gap-4 ${isTime ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 sm:grid-cols-3'}`}>
-            <Stepper label="Sätze" value={draft.sets} min={1} max={20} onChange={(sets) => setDraft((d) => ({ ...d, sets }))} />
+            <Stepper label="Sätze" value={draft.sets} min={1} max={20} wheel onChange={(sets) => setDraft((d) => ({ ...d, sets }))} />
             {isTime ? (
               <Stepper
                 label={exercise.sides === 2 ? 'Sekunden pro Seite' : 'Sekunden'}
                 value={draft.seconds ?? 0}
                 step={exercise.weight_step}
                 max={3600}
+                wheel
+                wheelMax={300}
                 unit="s"
                 onChange={(seconds) => setDraft((d) => ({ ...d, seconds }))}
               />
@@ -199,6 +201,8 @@ export function ExerciseCard({
                   value={draft.reps ?? 0}
                   min={1}
                   max={200}
+                  wheel
+                  wheelMax={60}
                   onChange={(reps) => setDraft((d) => ({ ...d, reps }))}
                 />
                 <Stepper
@@ -206,6 +210,8 @@ export function ExerciseCard({
                   value={draft.weight_kg ?? 0}
                   step={exercise.weight_step}
                   max={999}
+                  wheel
+                  wheelMax={250}
                   unit="kg"
                   onChange={(weight_kg) => setDraft((d) => ({ ...d, weight_kg }))}
                 />
