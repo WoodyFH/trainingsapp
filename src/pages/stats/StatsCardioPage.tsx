@@ -38,7 +38,7 @@ export default function StatsCardioPage() {
         <Loading />
       ) : stats.weeks.length === 0 ? (
         <EmptyState Icon={HeartPulse} title="Noch kein Cardio in diesem Zeitraum">
-          Trage unter „Cardio“ auf der Startseite Dauer, Kalorien, Puls oder Distanz ein.
+          Trage unter „Cardio“ auf der Startseite Dauer, Kalorien, Puls oder Distanz (beim Stairmaster Etagen) ein.
         </EmptyState>
       ) : (
         <div className="flex flex-col gap-4 lg:max-w-3xl">

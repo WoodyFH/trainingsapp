@@ -2,7 +2,6 @@ import { Check, ChevronDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { LastLog } from '../../data/queries'
 import type { LogInput } from '../../data/sessions'
-import { formatShortDate } from '../../lib/date'
 import { withAlpha } from '../../lib/color'
 import { describeLog } from '../../lib/volume'
 import type { GymExercise, GymExerciseLog } from '../../types/db'
@@ -114,7 +113,7 @@ export function ExerciseCard({
   const valuesText = done && log
     ? `${doneLabel ? `${doneLabel}: ` : ''}${describeLog(log, exercise.load_type)}`
     : last
-      ? `${describeLog(last.log, exercise.load_type)} · ${formatShortDate(last.date)}`
+      ? describeLog(last.log, exercise.load_type)
       : 'Noch nicht trainiert'
 
   const checkLabel = done ? 'Erledigt, Details öffnen' : last ? 'Wie letztes Mal speichern' : 'Werte eingeben'

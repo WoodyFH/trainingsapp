@@ -5,7 +5,8 @@ import type { MuscleId } from './muscles'
 export type LoadType = 'weight' | 'assisted' | 'bodyweight' | 'time'
 export type SessionKind = 'strength' | 'free' | 'cardio'
 export type SessionSource = 'app' | 'import'
-export type DistanceUnit = 'km' | 'm'
+/** Einheit des Distanzfelds einer Cardio-Art. 'floors' = Etagen (Stairmaster). */
+export type DistanceUnit = 'km' | 'm' | 'floors'
 /** 1 = beidseitig bzw. ohne Seitenbezug, 2 = pro Hand, Bein oder Seite. */
 export type Sides = 1 | 2
 

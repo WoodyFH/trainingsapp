@@ -267,7 +267,7 @@ function addCardioSheet(wb: Workbook, data: ExportData): void {
       kcal: log.kcal ?? null,
       hr: log.avg_hr ?? null,
       distance: log.distance ?? null,
-      unit: type?.distance_unit ?? '',
+      unit: type?.distance_unit === 'floors' ? 'Etagen' : (type?.distance_unit ?? ''),
       note: log.note ?? '',
     })
     row.getCell('date').numFmt = DATE_FORMAT

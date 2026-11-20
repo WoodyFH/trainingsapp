@@ -454,12 +454,13 @@ export function exercisesWithHistory(input: StatsInput): ExerciseListItem[] {
 // Cardio
 // ---------------------------------------------------------------------------
 
-export type CardioMetric = 'duration' | 'kcal' | 'distance'
+export type CardioMetric = 'duration' | 'kcal' | 'distance' | 'floors'
 
 export const CARDIO_METRICS: { key: CardioMetric; label: string; unit: string }[] = [
   { key: 'duration', label: 'Minuten', unit: 'min' },
   { key: 'kcal', label: 'Kalorien', unit: 'kcal' },
   { key: 'distance', label: 'Distanz', unit: 'km' },
+  { key: 'floors', label: 'Etagen', unit: 'Etagen' },
 ]
 
 /** Farben der Cardio-Arten (kategorisch, feste Reihenfolge nach Sortierung der Art, nie nach Rang im Zeitraum). */
@@ -489,6 +490,9 @@ function cardioValue(log: GymCardioLog, type: GymCardioType | undefined, metric:
   if (metric === 'duration') return log.duration_min ?? 0
   if (metric === 'kcal') return log.kcal ?? 0
   const d = log.distance ?? 0
+  const isFloors = type?.distance_unit === 'floors'
+  if (metric === 'floors') return isFloors ? d : 0
+  if (isFloors) return 0 // Etagen zählen nicht als Kilometer
   return type?.distance_unit === 'm' ? d / 1000 : d // Distanz immer in km
 }
 

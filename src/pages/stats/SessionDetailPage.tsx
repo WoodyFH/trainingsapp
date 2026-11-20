@@ -18,6 +18,7 @@ import {
   type CardioInput,
   type LogInput,
 } from '../../data/sessions'
+import { distanceFieldUnit, distanceLabel, formatDistance } from '../../lib/cardio'
 import { withAlpha } from '../../lib/color'
 import { formatDate, formatNumber } from '../../lib/date'
 import { TRAINING_COLORS } from '../../lib/trainingColors'
@@ -69,7 +70,7 @@ function CardioRow({ log, type }: { log: GymCardioLog; type: GymCardioType | und
     log.duration_min !== null ? `${formatNumber(log.duration_min)} min` : null,
     log.kcal !== null ? `${log.kcal} kcal` : null,
     log.avg_hr !== null ? `Ø ${log.avg_hr} bpm` : null,
-    log.distance !== null ? `${formatNumber(log.distance, 2)} ${type?.distance_unit ?? 'km'}` : null,
+    log.distance !== null ? formatDistance(log.distance, type?.distance_unit) : null,
   ]
     .filter(Boolean)
     .join(' · ')
@@ -106,7 +107,7 @@ function CardioRow({ log, type }: { log: GymCardioLog; type: GymCardioType | und
             {field('Dauer', 'duration', 'min')}
             {field('Kalorien', 'kcal', 'kcal')}
             {field('Ø Puls', 'hr', 'bpm')}
-            {field('Distanz', 'distance', type?.distance_unit ?? 'km')}
+            {field(distanceLabel(type?.distance_unit), 'distance', distanceFieldUnit(type?.distance_unit))}
           </div>
           <label className="flex flex-col gap-1">
             <span className="label-caps">Notiz</span>

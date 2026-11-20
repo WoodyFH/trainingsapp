@@ -391,11 +391,11 @@ export interface SeedCardioType {
   key: string
   name: string
   icon: string
-  distanceUnit: 'km' | 'm'
+  distanceUnit: 'km' | 'm' | 'floors'
 }
 
 export const SEED_CARDIO_TYPES: readonly SeedCardioType[] = [
-  { key: 'stairmaster', name: 'Stairmaster', icon: 'TrendingUp', distanceUnit: 'km' },
+  { key: 'stairmaster', name: 'Stairmaster', icon: 'TrendingUp', distanceUnit: 'floors' },
   { key: 'laufband', name: 'Laufband', icon: 'Footprints', distanceUnit: 'km' },
   { key: 'rudergeraet', name: 'Rudergerät', icon: 'Ship', distanceUnit: 'km' },
   { key: 'crosstrainer', name: 'Crosstrainer', icon: 'Activity', distanceUnit: 'km' },

@@ -88,6 +88,7 @@ describe('buildSeed', () => {
       'Wandern',
     ])
     expect(seed.cardioTypes.find((c) => c.name === 'Schwimmen')?.distance_unit).toBe('m')
+    expect(seed.cardioTypes.find((c) => c.name === 'Stairmaster')?.distance_unit).toBe('floors')
   })
 
   it('schreibt Ausrüstung und Ausführung in die Notiz', () => {

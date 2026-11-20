@@ -30,6 +30,8 @@ export interface MuscleBodySVGProps {
   /** Meldet den Auswahlzustand an Screenreader (aria-pressed), z. B. im Übungseditor. */
   selectable?: boolean
   size?: MuscleSize
+  /** Überschreibt die Höhe der Figur in px (Standard: je nach size). */
+  height?: number
   views?: 'both' | BodyView
   /** Überschreibt die Standard-Beschriftung VORNE / HINTEN (Standard: ab Größe md). */
   showLabels?: boolean
@@ -49,12 +51,13 @@ export function MuscleBodySVG({
   onMuscleClick,
   selectable = false,
   size = 'md',
+  height,
   views = 'both',
   showLabels,
   className = '',
   ariaLabel,
 }: MuscleBodySVGProps) {
-  const cfg = SIZE_CONFIG[size]
+  const cfg = { ...SIZE_CONFIG[size], height: height ?? SIZE_CONFIG[size].height }
   const interactive = Boolean(onMuscleClick)
   const labelsOn = showLabels ?? cfg.labels
   const secondaryColor = pastel(accentColor, 0.28)

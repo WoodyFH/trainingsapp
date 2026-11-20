@@ -320,7 +320,7 @@ describe('Übungsverlauf', () => {
 })
 
 describe('Cardio', () => {
-  const type = (id: string, name: string, sort: number, unit: 'km' | 'm' = 'km'): GymCardioType => ({
+  const type = (id: string, name: string, sort: number, unit: 'km' | 'm' | 'floors' = 'km'): GymCardioType => ({
     ...base,
     id,
     name,
@@ -366,6 +366,16 @@ describe('Cardio', () => {
   it('rechnet Meter in Kilometer um', () => {
     const c = cardioStats(data, range, TODAY, 'distance')
     expect(c.total).toBeCloseTo(5 + 3 + 1.5)
+  })
+
+  it('zählt Etagen getrennt und nicht als Kilometer', () => {
+    const stairs = input({
+      sessions: [session('s', '2026-11-10', 'cardio'), session('r', '2026-11-11', 'cardio')],
+      cardioTypes: new Map([type('stairs', 'Stairmaster', 1, 'floors'), type('run', 'Laufband', 2)].map((t) => [t.id, t])),
+      cardioLogs: [clog('1', 's', 'stairs', { distance: 40 }), clog('2', 'r', 'run', { distance: 5 })],
+    })
+    expect(cardioStats(stairs, range, TODAY, 'floors').total).toBe(40)
+    expect(cardioStats(stairs, range, TODAY, 'distance').total).toBe(5)
   })
 
   it('lässt Arten ohne Wert weg und liefert ohne Daten leere Listen', () => {

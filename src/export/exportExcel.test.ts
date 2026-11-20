@@ -119,7 +119,7 @@ describe('Excel-Export', () => {
     const cardio = wb.getWorksheet('Cardio')!
     expect(cardio.getRow(2).getCell('B').value).toBe('Stairmaster')
     expect(cardio.getRow(2).getCell('C').value).toBe(30)
-    expect(cardio.getRow(2).getCell('G').value).toBe('km')
+    expect(cardio.getRow(2).getCell('G').value).toBe('Etagen')
 
     const exercises = wb.getWorksheet('Übungen')!
     expect(exercises.rowCount).toBe(25) // Kopf + 24 Übungen

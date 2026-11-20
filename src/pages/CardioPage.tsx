@@ -5,6 +5,7 @@ import { Sheet } from '../components/ui/Sheet'
 import { useCardioLogsForDate, useCardioTypes } from '../data/queries'
 import { createCardioType, deleteCardioLog, hasCardioValue, saveCardioLog, type CardioInput } from '../data/sessions'
 import { withAlpha } from '../lib/color'
+import { distanceFieldUnit, distanceLabel, formatDistance } from '../lib/cardio'
 import { formatNumber, todayIso } from '../lib/date'
 import { getIcon, ICON_NAMES } from '../lib/icons'
 import { TRAINING_COLORS } from '../lib/trainingColors'
@@ -40,11 +41,13 @@ function NumberField({
           inputMode={inputMode}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-12 w-full rounded-2xl bg-zinc-100 pl-4 pr-14 text-lg font-semibold tabular-nums text-ink outline-none transition focus:bg-white focus:ring-2 focus:ring-zinc-300"
+          className={`h-12 w-full rounded-2xl bg-zinc-100 pl-4 text-lg font-semibold tabular-nums text-ink outline-none transition focus:bg-white focus:ring-2 focus:ring-zinc-300 ${unit ? 'pr-14' : 'pr-4'}`}
         />
-        <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-medium text-zinc-400">
-          {unit}
-        </span>
+        {unit && (
+          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-medium text-zinc-400">
+            {unit}
+          </span>
+        )}
       </span>
     </label>
   )
@@ -111,7 +114,7 @@ function NewTypeSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
         <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
           <legend className="label-caps mb-1.5 p-0">Distanzeinheit</legend>
           <div className="flex gap-2">
-            {(['km', 'm'] as const).map((u) => (
+            {(['km', 'm', 'floors'] as const).map((u) => (
               <button
                 key={u}
                 type="button"
@@ -120,7 +123,7 @@ function NewTypeSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
                 className="h-11 flex-1 rounded-2xl font-semibold transition"
                 style={unit === u ? { background: COLOR, color: '#fff' } : { background: '#F4F4F5', color: '#52525B' }}
               >
-                {u === 'km' ? 'Kilometer' : 'Meter'}
+                {u === 'km' ? 'Kilometer' : u === 'm' ? 'Meter' : 'Etagen'}
               </button>
             ))}
           </div>
@@ -168,7 +171,7 @@ export function CardioPage() {
       note: form.note.trim() ? form.note.trim() : null,
     }
     if (!hasCardioValue(input)) {
-      setError('Fülle mindestens einen Wert aus: Dauer, Kalorien, Puls oder Distanz.')
+      setError(`Fülle mindestens einen Wert aus: Dauer, Kalorien, Puls oder ${distanceLabel(selected.distance_unit)}.`)
       return
     }
     setError(null)
@@ -182,9 +185,9 @@ export function CardioPage() {
   return (
     <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
       <section className="flex flex-col gap-4" aria-label="Cardio-Art wählen">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3">
           <h2 className="label-caps m-0">Art</h2>
-          <DateField value={date} onChange={setDate} label="Datum des Cardio-Trainings" />
+          <DateField value={date} onChange={setDate} label="Datum des Cardio-Trainings (zum Nachtragen ändern)" />
         </div>
         <div className="grid grid-cols-3 gap-2">
           {types.map((t) => {
@@ -229,7 +232,13 @@ export function CardioPage() {
               <NumberField label="Dauer" unit="min" value={form.duration} onChange={(v) => setForm((f) => ({ ...f, duration: v }))} />
               <NumberField label="Kalorien" unit="kcal" inputMode="numeric" value={form.kcal} onChange={(v) => setForm((f) => ({ ...f, kcal: v }))} />
               <NumberField label="Ø Puls" unit="bpm" inputMode="numeric" value={form.hr} onChange={(v) => setForm((f) => ({ ...f, hr: v }))} />
-              <NumberField label="Distanz" unit={selected.distance_unit} value={form.distance} onChange={(v) => setForm((f) => ({ ...f, distance: v }))} />
+              <NumberField
+                label={distanceLabel(selected.distance_unit)}
+                unit={distanceFieldUnit(selected.distance_unit)}
+                inputMode={selected.distance_unit === 'floors' ? 'numeric' : 'decimal'}
+                value={form.distance}
+                onChange={(v) => setForm((f) => ({ ...f, distance: v }))}
+              />
             </div>
             <label className="flex flex-col gap-1.5">
               <span className="label-caps">Notiz</span>
@@ -269,7 +278,7 @@ export function CardioPage() {
                 l.duration_min !== null ? `${formatNumber(l.duration_min)} min` : null,
                 l.kcal !== null ? `${l.kcal} kcal` : null,
                 l.avg_hr !== null ? `Ø ${l.avg_hr} bpm` : null,
-                l.distance !== null ? `${formatNumber(l.distance, 2)} ${type?.distance_unit ?? 'km'}` : null,
+                l.distance !== null ? formatDistance(l.distance, type?.distance_unit) : null,
               ].filter(Boolean)
               return (
                 <div key={l.id} className="flex items-center gap-3 border-t border-line py-3 first-of-type:border-t-0">

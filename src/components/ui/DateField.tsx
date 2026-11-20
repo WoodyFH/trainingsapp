@@ -1,4 +1,4 @@
-import { CalendarDays } from 'lucide-react'
+import { CalendarDays, ChevronDown } from 'lucide-react'
 import { formatDate, todayIso, weekdayName } from '../../lib/date'
 
 interface DateFieldProps {
@@ -10,13 +10,23 @@ interface DateFieldProps {
   label?: string
 }
 
-/** Antippbares Datum. Das native Datumsfeld liegt unsichtbar darüber und öffnet die Auswahl des Geräts. */
+/**
+ * Antippbares Datum zum Nachtragen. Das native Datumsfeld liegt unsichtbar darüber und öffnet die Auswahl des Geräts.
+ * Ist nicht der heutige Tag gewählt, wird das Feld hervorgehoben, damit ein Nachtrag nicht übersehen wird.
+ */
 export function DateField({ value, onChange, max = todayIso(), label = 'Datum der Einheit' }: DateFieldProps) {
   const isToday = value === todayIso()
   return (
-    <label className="relative inline-flex h-11 cursor-pointer items-center gap-2 rounded-2xl bg-zinc-100 px-4 text-sm font-semibold text-ink">
-      <CalendarDays className="size-4 text-zinc-500" aria-hidden />
-      <span>{isToday ? 'Heute' : weekdayName(value)}, {formatDate(value)}</span>
+    <label
+      className={`relative inline-flex h-11 cursor-pointer items-center gap-2 rounded-2xl px-4 text-sm font-semibold transition-colors ${
+        isToday ? 'bg-zinc-100 text-ink' : 'bg-amber-100 text-amber-900'
+      }`}
+    >
+      <CalendarDays className={`size-4 ${isToday ? 'text-zinc-500' : 'text-amber-700'}`} aria-hidden />
+      <span>
+        {isToday ? 'Heute' : weekdayName(value)}, {formatDate(value)}
+      </span>
+      <ChevronDown className={`size-4 ${isToday ? 'text-zinc-400' : 'text-amber-700'}`} aria-hidden />
       <input
         type="date"
         value={value}

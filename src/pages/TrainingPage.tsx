@@ -18,12 +18,14 @@ function RotationButtons() {
     return (
       <div className="grid grid-cols-3 gap-2" aria-label="Lädt" role="status">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="h-40 animate-pulse rounded-3xl bg-white" />
+          <div key={i} className="h-32 animate-pulse rounded-3xl bg-white" />
         ))}
       </div>
     )
   }
 
+  // Alle drei Kacheln haben denselben Aufbau (Hinweiszeile, Symbol, Titel, Name, zuletzt),
+  // damit Symbole und Texte in einer Linie stehen. Die Hinweiszeile bleibt bei den anderen leer.
   return (
     <div className="grid grid-cols-3 gap-2">
       {info.templates.map((t) => {
@@ -35,21 +37,21 @@ function RotationButtons() {
             key={t.id}
             to={`/training/${t.id}`}
             aria-label={`Training ${t.rotation_order}, ${t.name}${isNext ? ', als Nächstes' : ''}`}
-            className="relative flex min-h-40 flex-col justify-between rounded-3xl p-3 text-left transition active:scale-[0.98]"
+            className="relative flex min-w-0 flex-col gap-1 rounded-3xl p-2.5 text-left transition active:scale-[0.98]"
             style={
               isNext
-                ? { background: t.color, color: '#fff', border: `4px solid ${withAlpha('#000000', 0.12)}` }
-                : { background: withAlpha(t.color, 0.13), color: '#18181B', border: '4px solid transparent' }
+                ? { background: t.color, color: '#fff', border: `3px solid ${withAlpha('#000000', 0.12)}` }
+                : { background: withAlpha(t.color, 0.13), color: '#18181B', border: '3px solid transparent' }
             }
           >
-            <span className="flex flex-col gap-2">
-              {isNext && <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-90">Als Nächstes</span>}
-              <Icon className="size-7" style={isNext ? undefined : { color: t.color }} aria-hidden />
+            <span className="h-3 text-[10px] font-extrabold uppercase leading-3 tracking-wider opacity-90" aria-hidden>
+              {isNext ? 'Als Nächstes' : ''}
             </span>
-            <span className="flex flex-col">
-              <span className="text-sm font-extrabold leading-tight">Training {t.rotation_order}</span>
-              <span className={`text-xs font-medium leading-tight ${isNext ? 'opacity-90' : 'text-zinc-600'}`}>{t.name}</span>
-              <span className={`mt-1.5 text-[11px] ${isNext ? 'opacity-80' : 'text-zinc-500'}`}>
+            <Icon className="size-7" style={isNext ? undefined : { color: t.color }} aria-hidden />
+            <span className="mt-2 flex min-w-0 flex-col">
+              <span className="truncate text-sm font-extrabold leading-tight">Training {t.rotation_order}</span>
+              <span className={`truncate text-xs font-medium leading-tight ${isNext ? 'opacity-90' : 'text-zinc-600'}`}>{t.name}</span>
+              <span className={`mt-1 truncate text-[11px] leading-tight ${isNext ? 'opacity-80' : 'text-zinc-500'}`}>
                 {last ? `zuletzt ${formatShortDate(last)}` : 'noch nie'}
               </span>
             </span>
@@ -74,16 +76,16 @@ function WideLink({
   subtitle: string
 }) {
   return (
-    <Link to={to} className="card flex items-center gap-4 p-4 transition active:scale-[0.99]">
+    <Link to={to} className="card flex items-center gap-3 px-3 py-2.5 transition active:scale-[0.99]">
       <span
-        className="flex size-12 shrink-0 items-center justify-center rounded-2xl"
+        className="flex size-10 shrink-0 items-center justify-center rounded-xl"
         style={{ background: withAlpha(color, 0.14), color }}
       >
-        <Icon className="size-6" aria-hidden />
+        <Icon className="size-5" aria-hidden />
       </span>
       <span className="flex min-w-0 flex-1 flex-col">
-        <span className="text-base font-extrabold text-ink">{title}</span>
-        <span className="text-sm text-zinc-500">{subtitle}</span>
+        <span className="text-base font-extrabold leading-tight text-ink">{title}</span>
+        <span className="truncate text-sm leading-tight text-zinc-500">{subtitle}</span>
       </span>
       <ChevronRight className="size-5 shrink-0 text-zinc-300" aria-hidden />
     </Link>
@@ -145,11 +147,11 @@ function WeekCard({ today }: { today: string }) {
   const trainingDays = data?.activity.size ?? 0
 
   return (
-    <section className="card flex flex-col gap-5 p-5" aria-label="Diese Woche">
+    <section className="card flex flex-col gap-3 p-4 sm:gap-5 sm:p-5" aria-label="Diese Woche">
       <h2 className="label-caps m-0">Diese Woche</h2>
       <div className="flex flex-col items-center gap-2">
         <div className="sm:hidden">
-          <MuscleBodySVG size="md" intensity={intensity} accentColor={TRAINING_COLORS.training1} />
+          <MuscleBodySVG size="md" height={132} intensity={intensity} accentColor={TRAINING_COLORS.training1} />
         </div>
         <div className="hidden sm:block">
           <MuscleBodySVG size="lg" intensity={intensity} accentColor={TRAINING_COLORS.training1} />
@@ -160,7 +162,7 @@ function WeekCard({ today }: { today: string }) {
       </div>
 
       <div
-        className="grid grid-flow-col grid-rows-7 gap-[3px]"
+        className="mx-auto grid grid-flow-col grid-rows-[repeat(7,10px)] auto-cols-[10px] gap-[3px] sm:grid-rows-[repeat(7,16px)] sm:auto-cols-[16px] sm:gap-1"
         role="img"
         aria-label={`${trainingDays} Trainingstage in den letzten ${HEATMAP_WEEKS} Wochen`}
       >
@@ -168,7 +170,7 @@ function WeekCard({ today }: { today: string }) {
           <span
             key={c.date}
             title={c.future ? undefined : formatShortDate(c.date)}
-            className="aspect-square rounded-md"
+            className="rounded-[3px] sm:rounded-md"
             style={{ background: c.color, opacity: c.future ? 0.35 : 1 }}
           />
         ))}
@@ -180,8 +182,8 @@ function WeekCard({ today }: { today: string }) {
 export function TrainingPage() {
   const today = todayIso()
   return (
-    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-4">
+      <div className="flex flex-col gap-3 lg:gap-4">
         <ContinueBanner today={today} />
         <RotationButtons />
         <WideLink
@@ -189,14 +191,14 @@ export function TrainingPage() {
           color={TRAINING_COLORS.cardio}
           Icon={HeartPulse}
           title="Cardio"
-          subtitle="Dauer, Kalorien, Puls und Distanz"
+          subtitle="Dauer, Kalorien, Puls"
         />
         <WideLink
           to="/frei"
           color={TRAINING_COLORS.free}
           Icon={Zap}
           title="Freitraining"
-          subtitle="Übungen frei aus der Bibliothek wählen"
+          subtitle="Übungen frei wählen"
         />
       </div>
       <WeekCard today={today} />
